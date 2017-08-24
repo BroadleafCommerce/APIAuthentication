@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.broadleafcommerce</groupId>
+        <artifactId>broadleaf-module-parent</artifactId>
+        <version>2.0.13-GA</version>
+    </parent>
+
+    <name>BroadleafCommerce API Authentication</name>
+    <description>BroadleafCommerce Module For API Authentication</description>
+    <url>http://www.broadleafcommerce.org</url>
+
+    <groupId>com.broadleafcommerce</groupId>
+    <artifactId>broadleaf-api-authentication</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.uri>${project.baseUri}</project.uri>
+        <blc.version>5.2.0-GA</blc.version>
+    </properties>
+
+    <scm>
+        <connection>scm:git:git@github.com:BroadleafCommerce/APIAuthentication.git</connection>
+        <developerConnection>scm:git:git@github.com:BroadleafCommerce/APIAuthentication.git</developerConnection>
+        <url>https://github.com/BroadleafCommerce/APIAuthentication</url>
+        <tag>HEAD</tag>
+    </scm>
+    <licenses>
+        <license>
+            <name>Broadleaf End User License Agreement 1.1</name>
+            <url>http://license.broadleafcommerce.org/commercial_license-1.1.txt</url>
+            <distribution>repo</distribution>
+            <comments>Broadleaf Commerce Commercial License</comments>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>architect</id>
+            <email>architect@broadleafcommerce.org</email>
+            <organization>Broadleaf Commerce</organization>
+            <organizationUrl>http://www.broadleafcommerce.org</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>
+    </developers>
+    <repositories>
+        <repository>
+            <id>enterprise-releases</id>
+            <name>enterprise-releases</name>
+            <url>http://nexus.broadleafcommerce.org/nexus/content/groups/enterprise-releases/</url>
+        </repository>
+        <repository>
+            <id>enterprise-snapshots</id>
+            <name>enterprise-snapshots</name>
+            <url>http://nexus.broadleafcommerce.org/nexus/content/groups/enterprise-snapshots/</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://nexus.broadleafcommerce.org/nexus/content/repositories/api-authentication-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>releases</id>
+            <url>http://nexus.broadleafcommerce.org/nexus/content/repositories/api-authentication-releases/</url>
+        </repository>
+    </distributionManagement>
+    <dependencies>
+        <!-- Required dependencies -->
+        <dependency>
+            <groupId>org.broadleafcommerce</groupId>
+            <artifactId>broadleaf-common</artifactId>
+            <version>${blc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.broadleafcommerce</groupId>
+            <artifactId>broadleaf-profile</artifactId>
+            <version>${blc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.broadleafcommerce</groupId>
+            <artifactId>broadleaf-profile-web</artifactId>
+            <version>${blc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+        
+        <!-- Still required but they're provided -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+
+        <!-- Optional -->
+
+    </dependencies>
+</project>
