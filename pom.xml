@@ -30,10 +30,16 @@
     </scm>
     <licenses>
         <license>
+            <name>Broadleaf Fair Use 1.0</name>
+            <url>http://license.broadleafcommerce.org/fair_use_license-1.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>Fair Use Community License</comments>
+        </license>
+        <license>
             <name>Broadleaf End User License Agreement 1.1</name>
             <url>http://license.broadleafcommerce.org/commercial_license-1.1.txt</url>
             <distribution>repo</distribution>
-            <comments>Broadleaf Commerce Commercial License</comments>
+            <comments>Commercial License Applicable When Bounds of Fair Use License Are Exceeded</comments>
         </license>
     </licenses>
     <developers>
@@ -44,17 +50,29 @@
             <organizationUrl>http://www.broadleafcommerce.org</organizationUrl>
             <timezone>-6</timezone>
         </developer>
-    </developers>
+    </developers>    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <licenseResolver>${project.uri}/licenses</licenseResolver>
+                    <licenseName>blc_dual</licenseName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <repositories>
         <repository>
-            <id>enterprise-releases</id>
-            <name>enterprise-releases</name>
-            <url>http://nexus.broadleafcommerce.org/nexus/content/groups/enterprise-releases/</url>
+            <id>releases</id>
+            <name>public releases</name>
+            <url>http://nexus.broadleafcommerce.org/nexus/content/groups/community-releases/</url>
         </repository>
         <repository>
-            <id>enterprise-snapshots</id>
-            <name>enterprise-snapshots</name>
-            <url>http://nexus.broadleafcommerce.org/nexus/content/groups/enterprise-snapshots/</url>
+            <id>snapshots</id>
+            <name>public snapshots</name>
+            <url>http://nexus.broadleafcommerce.org/nexus/content/groups/community-snapshots/</url>
         </repository>
     </repositories>
     <distributionManagement>
