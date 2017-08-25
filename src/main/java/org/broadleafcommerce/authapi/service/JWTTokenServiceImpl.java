@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.service;
+package org.broadleafcommerce.authapi.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import com.broadleafcommerce.authapi.domain.JWTUserDTO;
+import org.broadleafcommerce.authapi.domain.JWTUserDTO;
 import java.util.Date;
 
 /**

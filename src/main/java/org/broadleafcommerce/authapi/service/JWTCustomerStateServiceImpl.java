@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.service;
+package org.broadleafcommerce.authapi.service;
 
 import org.broadleafcommerce.common.crossapp.service.CrossAppAuthService;
 import org.broadleafcommerce.profile.core.domain.Customer;
@@ -28,7 +28,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.broadleafcommerce.authapi.domain.RegisterDTO;
+import org.broadleafcommerce.authapi.domain.RegisterDTO;
 import javax.servlet.http.HttpServletRequest;
 
 /**

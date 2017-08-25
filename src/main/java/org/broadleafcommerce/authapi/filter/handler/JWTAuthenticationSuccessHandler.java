@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.filter.handler;
+package org.broadleafcommerce.authapi.filter.handler;
 
 import org.broadleafcommerce.profile.core.service.CustomerUserDetails;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,7 +23,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import com.broadleafcommerce.authapi.service.JWTTokenService;
+import org.broadleafcommerce.authapi.service.JWTTokenService;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;

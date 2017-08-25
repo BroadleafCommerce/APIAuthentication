@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.provider;
+package org.broadleafcommerce.authapi.provider;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -32,15 +32,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import com.broadleafcommerce.authapi.domain.JWTRefreshToken;
-import com.broadleafcommerce.authapi.domain.JWTUserDTO;
-import com.broadleafcommerce.authapi.exception.ExpiredJWTAuthenticationException;
-import com.broadleafcommerce.authapi.service.JWTTokenService;
+import org.broadleafcommerce.authapi.domain.JWTRefreshToken;
+import org.broadleafcommerce.authapi.domain.JWTUserDTO;
+import org.broadleafcommerce.authapi.exception.ExpiredJWTAuthenticationException;
+import org.broadleafcommerce.authapi.service.JWTTokenService;
 import java.util.List;
 
 /**
  * This provider is responsible for handling authentication for a {@code JWTAuthenticationToken} authentication.
- * This is generally only run when using the {@link com.broadleafcommerce.authapi.filter.JWTRefreshTokenFilter}
+ * This is generally only run when using the {@link org.broadleafcommerce.authapi.filter.JWTRefreshTokenFilter}
  * to verify the validity of the refresh token before generating a new access token for the user.
  *
  * @author Nick Crum ncrum

@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.provider;
+package org.broadleafcommerce.authapi.provider;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -32,10 +32,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import com.broadleafcommerce.authapi.domain.JWTAuthenticationToken;
-import com.broadleafcommerce.authapi.domain.JWTUserDTO;
-import com.broadleafcommerce.authapi.exception.ExpiredJWTAuthenticationException;
-import com.broadleafcommerce.authapi.service.JWTTokenService;
+import org.broadleafcommerce.authapi.domain.JWTAuthenticationToken;
+import org.broadleafcommerce.authapi.domain.JWTUserDTO;
+import org.broadleafcommerce.authapi.exception.ExpiredJWTAuthenticationException;
+import org.broadleafcommerce.authapi.service.JWTTokenService;
 import java.util.List;
 
 /**

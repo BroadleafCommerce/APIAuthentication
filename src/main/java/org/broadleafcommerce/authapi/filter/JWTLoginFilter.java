@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.filter;
+package org.broadleafcommerce.authapi.filter;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,8 +24,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import com.broadleafcommerce.authapi.domain.AccountCredentials;
-import com.broadleafcommerce.authapi.filter.handler.JWTAuthenticationSuccessHandler;
+import org.broadleafcommerce.authapi.domain.AccountCredentials;
+import org.broadleafcommerce.authapi.filter.handler.JWTAuthenticationSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Collections;

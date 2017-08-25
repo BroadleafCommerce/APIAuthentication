@@ -15,13 +15,13 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.service;
+package org.broadleafcommerce.authapi.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import com.broadleafcommerce.authapi.filter.JWTAuthenticationTokenFilter;
-import com.broadleafcommerce.authapi.filter.JWTLoginFilter;
-import com.broadleafcommerce.authapi.filter.JWTRefreshTokenFilter;
-import com.broadleafcommerce.authapi.filter.JWTRegisterFilter;
+import org.broadleafcommerce.authapi.filter.JWTAuthenticationTokenFilter;
+import org.broadleafcommerce.authapi.filter.JWTLoginFilter;
+import org.broadleafcommerce.authapi.filter.JWTRefreshTokenFilter;
+import org.broadleafcommerce.authapi.filter.JWTRegisterFilter;
 
 /**
  * @author Nick Crum ncrum

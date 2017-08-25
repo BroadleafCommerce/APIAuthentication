@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.config;
+package org.broadleafcommerce.authapi.config;
 
 import org.broadleafcommerce.common.logging.LifeCycleEvent;
 import org.broadleafcommerce.common.logging.ModuleLifecycleLoggingBean;
@@ -29,8 +29,8 @@ import org.springframework.context.annotation.FilterType;
  */
 @Configuration("blApiAuthenticationConfig")
 @ComponentScan(
-        value = "com.broadleafcommerce.authapi",
-        excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.broadleafcommerce.authapi.config.*"))
+        value = "org.broadleafcommerce.authapi",
+        excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.broadleafcommerce.authapi.config.*"))
 public class ApiAuthenticationConfig {
 
     @Bean

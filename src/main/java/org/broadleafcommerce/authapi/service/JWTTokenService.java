@@ -15,11 +15,11 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.service;
+package org.broadleafcommerce.authapi.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
-import com.broadleafcommerce.authapi.domain.JWTUserDTO;
+import org.broadleafcommerce.authapi.domain.JWTUserDTO;
 
 
 /**

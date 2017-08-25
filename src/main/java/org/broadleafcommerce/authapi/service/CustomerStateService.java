@@ -15,10 +15,10 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.service;
+package org.broadleafcommerce.authapi.service;
 
 import org.broadleafcommerce.profile.core.domain.Customer;
-import com.broadleafcommerce.authapi.domain.RegisterDTO;
+import org.broadleafcommerce.authapi.domain.RegisterDTO;
 import javax.servlet.http.HttpServletRequest;
 
 /**

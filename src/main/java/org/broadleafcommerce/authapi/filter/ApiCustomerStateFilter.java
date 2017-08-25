@@ -15,14 +15,14 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.filter;
+package org.broadleafcommerce.authapi.filter;
 
 import org.broadleafcommerce.common.web.filter.AbstractIgnorableOncePerRequestFilter;
 import org.broadleafcommerce.common.web.filter.FilterOrdered;
 import org.broadleafcommerce.profile.core.domain.Customer;
 import org.broadleafcommerce.profile.web.core.CustomerState;
 import org.springframework.stereotype.Component;
-import com.broadleafcommerce.authapi.service.CustomerStateService;
+import org.broadleafcommerce.authapi.service.CustomerStateService;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

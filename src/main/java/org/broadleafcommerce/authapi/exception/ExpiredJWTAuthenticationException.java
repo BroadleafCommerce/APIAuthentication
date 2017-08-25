@@ -15,7 +15,7 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package com.broadleafcommerce.authapi.exception;
+package org.broadleafcommerce.authapi.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
@@ -23,8 +23,8 @@ import org.springframework.security.core.AuthenticationException;
  * This exception is thrown by the {@code JWTAuthenticationProvider} when an expired jwt token is found. This exception's
  * message is then returned within a 401 response to indicate the request was unauthorized due to an expired token.
  *
- * @see com.broadleafcommerce.authapi.provider.JWTAuthenticationProvider
- * @see com.broadleafcommerce.authapi.provider.JWTRefreshAuthenticationProvider
+ * @see org.broadleafcommerce.authapi.provider.JWTAuthenticationProvider
+ * @see org.broadleafcommerce.authapi.provider.JWTRefreshAuthenticationProvider
  * @author Nick Crum ncrum
  */
 public class ExpiredJWTAuthenticationException extends AuthenticationException {
