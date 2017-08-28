@@ -17,6 +17,7 @@
  */
 package org.broadleafcommerce.authapi.filter;
 
+import org.broadleafcommerce.authapi.domain.AccountCredentials;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,9 +25,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.broadleafcommerce.authapi.domain.RegisterDTO;
-import org.broadleafcommerce.authapi.filter.handler.JWTAuthenticationSuccessHandler;
-import org.broadleafcommerce.authapi.service.CustomerStateService;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Collections;
@@ -36,20 +35,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * This filter is responseponsible for handling the login for registered customers. This is not automatically registered with
- * the filter chain and requestuiresponse the filter to be added before the {@link JWTAuthenticationTokenFilter}.
+ * This filter is responsible for handling the login for registered customers. This is not automatically registered with
+ * the filter chain and requires the filter to be added before the {@link AccessTokenAuthenticationFilter}.
  *
  * @author Nick Crum ncrum
  */
-public class JWTRegisterFilter extends AbstractAuthenticationProcessingFilter {
+public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    protected final JWTAuthenticationSuccessHandler successHandler;
-    protected final CustomerStateService customerStateService;
+    protected final AuthenticationSuccessHandler successHandler;
 
-    public JWTRegisterFilter(String url, AuthenticationManager authenticationManager, JWTAuthenticationSuccessHandler successHandler, CustomerStateService customerStateService) {
+    public ApiLoginFilter(String url, AuthenticationManager authenticationManager, AuthenticationSuccessHandler successHandler) {
         super(url);
         this.successHandler = successHandler;
-        this.customerStateService = customerStateService;
         setAuthenticationManager(authenticationManager);
     }
 
@@ -57,15 +54,12 @@ public class JWTRegisterFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
-        RegisterDTO dto = new ObjectMapper()
-                .readValue(request.getInputStream(), RegisterDTO.class);
-
-        customerStateService.registerNewCustomer(dto);
-
+        AccountCredentials creds = new ObjectMapper()
+                .readValue(request.getInputStream(), AccountCredentials.class);
         return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        dto.getEmailAddress(),
-                        dto.getPassword(),
+                        creds.getUsername(),
+                        creds.getPassword(),
                         Collections.<GrantedAuthority>emptyList()
                 )
         );

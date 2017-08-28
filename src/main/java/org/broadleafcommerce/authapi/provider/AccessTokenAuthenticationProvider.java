@@ -17,10 +17,7 @@
  */
 package org.broadleafcommerce.authapi.provider;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -32,34 +29,32 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import org.broadleafcommerce.authapi.domain.JWTAuthenticationToken;
-import org.broadleafcommerce.authapi.domain.JWTUserDTO;
-import org.broadleafcommerce.authapi.exception.ExpiredJWTAuthenticationException;
-import org.broadleafcommerce.authapi.service.JWTTokenService;
+import org.broadleafcommerce.authapi.domain.AccessTokenAuthentication;
+import org.broadleafcommerce.authapi.domain.ApiUserDTO;
+import org.broadleafcommerce.authapi.service.AuthenticationTokenService;
 import java.util.List;
 
 /**
- * This provider is responsible for handling authentication for a {@code JWTAuthenticationToken} authentication.
+ * This provider is responsible for handling authentication for a {@code AccessTokenAuthentication} authentication.
  *
  * @author Nick Crum ncrum
  */
-@Service("blJWTAuthenticationProvider")
-@ConditionalOnProperty(value = "blc.auth.jwt.enabled", matchIfMissing = true)
-public class JWTAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
+@Service("blAccessTokenAuthenticationProvider")
+public class AccessTokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
-    protected final JWTTokenService jwtTokenService;
+    protected final AuthenticationTokenService authenticationTokenService;
 
     protected final UserDetailsService userDetailsService;
 
     @Autowired
-    public JWTAuthenticationProvider(JWTTokenService jwtTokenService, UserDetailsService userDetailsService) {
-        this.jwtTokenService = jwtTokenService;
+    public AccessTokenAuthenticationProvider(AuthenticationTokenService authenticationTokenService, UserDetailsService userDetailsService) {
+        this.authenticationTokenService = authenticationTokenService;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return (JWTAuthenticationToken.class.isAssignableFrom(authentication));
+        return (AccessTokenAuthentication.class.isAssignableFrom(authentication));
     }
 
     @Override
@@ -68,24 +63,19 @@ public class JWTAuthenticationProvider extends AbstractUserDetailsAuthentication
 
     @Override
     protected Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user) {
-        JWTAuthenticationToken jwtAuthenticationToken = (JWTAuthenticationToken) authentication;
-        JWTAuthenticationToken result = new JWTAuthenticationToken(
-                principal, authentication.getCredentials(), user.getAuthorities(), jwtAuthenticationToken.getToken());
+        AccessTokenAuthentication accessTokenAuthentication = (AccessTokenAuthentication) authentication;
+        AccessTokenAuthentication result = new AccessTokenAuthentication(
+                principal, authentication.getCredentials(), user.getAuthorities(), accessTokenAuthentication.getToken());
         result.setDetails(authentication.getDetails());
         return result;
     }
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        JWTAuthenticationToken jwtAuthenticationToken = (JWTAuthenticationToken) authentication;
-        String token = jwtAuthenticationToken.getToken();
+        AccessTokenAuthentication accessTokenAuthentication = (AccessTokenAuthentication) authentication;
+        String token = accessTokenAuthentication.getToken();
 
-        JWTUserDTO dto = null;
-        try {
-            dto = jwtTokenService.parseAuthenticationToken(token);
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredJWTAuthenticationException(e);
-        }
+        ApiUserDTO dto = authenticationTokenService.parseAccessToken(token);
 
         if (dto == null) {
             throw new AuthenticationServiceException("INVALID_ACCESS_TOKEN");

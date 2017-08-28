@@ -15,26 +15,23 @@
  * between you and Broadleaf Commerce. You may not use this file except in compliance with the applicable license.
  * #L%
  */
-package org.broadleafcommerce.authapi.service;
+package org.broadleafcommerce.authapi.exception;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
-import org.broadleafcommerce.authapi.domain.JWTUserDTO;
-
+import org.broadleafcommerce.authapi.provider.AccessTokenAuthenticationProvider;
+import org.broadleafcommerce.authapi.provider.RefreshTokenAuthenticationProvider;
+import org.springframework.security.core.AuthenticationException;
 
 /**
+ * This exception is thrown by the {@code AccessTokenService} when an expired token is found. This exception's
+ * message is then returned within a 401 response to indicate the request was unauthorized due to an expired token.
+ *
+ * @see AccessTokenAuthenticationProvider
+ * @see RefreshTokenAuthenticationProvider
  * @author Nick Crum ncrum
  */
-public interface JWTTokenService {
-    JWTUserDTO parseAuthenticationToken(String token) throws ExpiredJwtException;
+public class ExpiredAuthenticationTokenException extends AuthenticationException {
 
-    JWTUserDTO parseRefreshToken(String token) throws ExpiredJwtException;
-
-    String generateAuthenticationToken(Long userId, String username, boolean isCrossAppAuth, String commaSeparatedAuthorities);
-
-    String generateRefreshToken(Long userId, String username, boolean isCrossAppAuth, String commaSeparatedAuthorities);
-
-    Long parseCustomerToken(String customerToken);
-
-    String generateCustomerToken(Long customerId);
+    public ExpiredAuthenticationTokenException(Throwable t) {
+        super("EXPIRED_ACCESS_TOKEN", t);
+    }
 }

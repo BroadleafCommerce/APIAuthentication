@@ -25,45 +25,47 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
+import org.broadleafcommerce.authapi.exception.ExpiredAuthenticationTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.broadleafcommerce.authapi.domain.JWTUserDTO;
+import org.broadleafcommerce.authapi.domain.ApiUserDTO;
 import java.util.Date;
+import javax.servlet.http.Cookie;
 
 /**
  * @author Nick Crum ncrum
  */
 @Service("blJWTTokenService")
 @ConditionalOnProperty(name = "blc.auth.jwt.enabled")
-public class JWTTokenServiceImpl implements JWTTokenService {
+public class JWTAuthenticationTokenServiceImpl implements AuthenticationTokenService {
 
     protected final Environment environment;
 
     @Autowired
-    public JWTTokenServiceImpl(Environment environment) {
+    public JWTAuthenticationTokenServiceImpl(Environment environment) {
         this.environment = environment;
     }
 
     @Override
-    public JWTUserDTO parseAuthenticationToken(String token) throws ExpiredJwtException {
+    public ApiUserDTO parseAccessToken(String token) throws ExpiredJwtException {
         return parseTokenUsingSecret(token, getAuthenticationSecret());
     }
 
     @Override
-    public JWTUserDTO parseRefreshToken(String token) throws ExpiredJwtException {
+    public ApiUserDTO parseRefreshToken(String token) throws ExpiredJwtException {
         return parseTokenUsingSecret(token, getRefreshSecret());
     }
 
-    protected JWTUserDTO parseTokenUsingSecret(String token, String secret) throws ExpiredJwtException {
+    protected ApiUserDTO parseTokenUsingSecret(String token, String secret) {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
 
-            JWTUserDTO dto = new JWTUserDTO();
+            ApiUserDTO dto = new ApiUserDTO();
             dto.setUsername(claims.getSubject());
             dto.setUserId(claims.get("userId", Integer.class).longValue());
             dto.setCrossAppAuth(claims.get("isCrossAppAuth", Boolean.class));
@@ -72,6 +74,8 @@ public class JWTTokenServiceImpl implements JWTTokenService {
             return dto;
         } catch (UnsupportedJwtException | SignatureException | IllegalArgumentException | MalformedJwtException e) {
             return null;
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredAuthenticationTokenException(e);
         }
     }
 
@@ -135,8 +139,14 @@ public class JWTTokenServiceImpl implements JWTTokenService {
                 .compact();
     }
 
-    protected Long getAuthenticationTokenExpirationTime() {
-        return environment.getProperty("blc.auth.jwt.access.expiration", Long.class);
+    @Override
+    public Cookie buildRefreshTokenCookie(String refreshToken) {
+        Cookie cookie = new Cookie(getRefreshTokenCookieName(), refreshToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(getRefreshTokenCookieMaxAge());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(isRefreshTokenSecure());
+        return cookie;
     }
 
     protected String getAuthenticationSecret() {
@@ -151,6 +161,22 @@ public class JWTTokenServiceImpl implements JWTTokenService {
         return environment.getProperty("blc.auth.jwt.refresh.secret");
     }
 
+    protected String getRefreshTokenCookieName() {
+        return environment.getProperty("blc.auth.jwt.refresh.cookie.name");
+    }
+
+    protected int getRefreshTokenCookieMaxAge() {
+        return environment.getProperty("blc.auth.jwt.refresh.cookie.expiration", Integer.class);
+    }
+
+    protected boolean isRefreshTokenSecure() {
+        return environment.getProperty("blc.auth.jwt.refresh.cookie.secure", Boolean.class);
+    }
+
+    protected Long getAuthenticationTokenExpirationTime() {
+        return environment.getProperty("blc.auth.jwt.access.expiration", Long.class);
+    }
+
     protected Long getCustomerTokenExpirationTime() {
         return environment.getProperty("blc.auth.jwt.customer.expiration", Long.class);
     }
@@ -158,4 +184,6 @@ public class JWTTokenServiceImpl implements JWTTokenService {
     protected String getCustomerSecret() {
         return environment.getProperty("blc.auth.jwt.customer.secret");
     }
+
+
 }
