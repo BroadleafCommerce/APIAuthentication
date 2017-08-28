@@ -27,8 +27,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.broadleafcommerce.authapi.domain.JWTRefreshToken;
-import org.broadleafcommerce.authapi.service.JWTTokenService;
+import org.broadleafcommerce.authapi.domain.RefreshTokenAuthentication;
+import org.broadleafcommerce.authapi.service.AuthenticationTokenService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -41,15 +41,15 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Nick Crum ncrum
  */
-public class JWTRefreshTokenFilter extends AbstractAuthenticationProcessingFilter {
+public class RefreshTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     protected final Environment environment;
-    protected final JWTTokenService jwtTokenService;
+    protected final AuthenticationTokenService authenticationTokenService;
 
-    public JWTRefreshTokenFilter(String url, AuthenticationManager authenticationManager, Environment environment, JWTTokenService jwtTokenService) {
+    public RefreshTokenAuthenticationFilter(String url, AuthenticationManager authenticationManager, Environment environment, AuthenticationTokenService authenticationTokenService) {
         super(url);
         this.environment = environment;
-        this.jwtTokenService = jwtTokenService;
+        this.authenticationTokenService = authenticationTokenService;
         setAuthenticationManager(authenticationManager);
     }
 
@@ -62,9 +62,9 @@ public class JWTRefreshTokenFilter extends AbstractAuthenticationProcessingFilte
             throw new AuthenticationServiceException("No refresh token provided");
         }
 
-        JWTRefreshToken jwtRefreshToken = new JWTRefreshToken(refreshToken);
+        RefreshTokenAuthentication refreshTokenAuthentication = new RefreshTokenAuthentication(refreshToken);
 
-        return getAuthenticationManager().authenticate(jwtRefreshToken);
+        return getAuthenticationManager().authenticate(refreshTokenAuthentication);
     }
 
     protected String getRefreshToken(HttpServletRequest request) {
@@ -98,7 +98,7 @@ public class JWTRefreshTokenFilter extends AbstractAuthenticationProcessingFilte
             Authentication auth) throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(auth);
         CustomerUserDetails customerUserDetails = (CustomerUserDetails) auth.getPrincipal();
-        String authToken = jwtTokenService.generateAuthenticationToken(customerUserDetails.getId(), customerUserDetails.getUsername(), false, null);
+        String authToken = authenticationTokenService.generateAuthenticationToken(customerUserDetails.getId(), customerUserDetails.getUsername(), false, null);
         res.setHeader("Authorization", "Bearer " + authToken);
     }
 

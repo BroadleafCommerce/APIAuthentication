@@ -20,7 +20,7 @@ package org.broadleafcommerce.authapi.domain;
 /**
  * @author Nick Crum ncrum
  */
-public class JWTUserDTO {
+public class ApiUserDTO {
 
     protected Long userId;
     protected String username;

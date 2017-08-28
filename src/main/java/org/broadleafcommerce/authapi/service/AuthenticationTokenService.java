@@ -17,21 +17,26 @@
  */
 package org.broadleafcommerce.authapi.service;
 
-import org.broadleafcommerce.profile.core.domain.Customer;
-import org.broadleafcommerce.authapi.domain.RegisterDTO;
-import javax.servlet.http.HttpServletRequest;
+import org.broadleafcommerce.authapi.domain.ApiUserDTO;
+import org.broadleafcommerce.authapi.exception.ExpiredAuthenticationTokenException;
+import javax.servlet.http.Cookie;
+
 
 /**
  * @author Nick Crum ncrum
  */
-public interface CustomerStateService {
+public interface AuthenticationTokenService {
+    ApiUserDTO parseAccessToken(String token) throws ExpiredAuthenticationTokenException;
 
-    /**
-     * Processes the {@code RegisterDTO} to create and register a new customer.
-     *
-     * @param registerDTO the object containing the new customer information
-     */
-    Customer registerNewCustomer(RegisterDTO registerDTO);
+    ApiUserDTO parseRefreshToken(String token) throws ExpiredAuthenticationTokenException;
 
-    Customer getCustomer(HttpServletRequest request);
+    String generateAuthenticationToken(Long userId, String username, boolean isCrossAppAuth, String commaSeparatedAuthorities);
+
+    String generateRefreshToken(Long userId, String username, boolean isCrossAppAuth, String commaSeparatedAuthorities);
+
+    Long parseCustomerToken(String customerToken);
+
+    String generateCustomerToken(Long customerId);
+
+    Cookie buildRefreshTokenCookie(String refreshToken);
 }

@@ -17,57 +17,41 @@
  */
 package org.broadleafcommerce.authapi.filter.handler;
 
+import org.broadleafcommerce.authapi.service.AuthenticationTokenService;
 import org.broadleafcommerce.profile.core.service.CustomerUserDetails;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.broadleafcommerce.authapi.service.JWTTokenService;
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Nick Crum ncrum
  */
-@Component("blJWTAuthenticationSuccessHandler")
-@ConditionalOnProperty("blc.auth.jwt.enabled")
-public class JWTAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+@Component("blTokenAuthenticationSuccessHandler")
+public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     protected final Environment environment;
-    protected final JWTTokenService jwtTokenService;
+    protected final AuthenticationTokenService authenticationTokenService;
 
-    public JWTAuthenticationSuccessHandler(Environment environment, JWTTokenService jwtTokenService) {
+    public TokenAuthenticationSuccessHandler(Environment environment, AuthenticationTokenService authenticationTokenService) {
         this.environment = environment;
-        this.jwtTokenService = jwtTokenService;
+        this.authenticationTokenService = authenticationTokenService;
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomerUserDetails customerUserDetails = (CustomerUserDetails) authentication.getPrincipal();
-        String authToken = jwtTokenService.generateAuthenticationToken(customerUserDetails.getId(), customerUserDetails.getUsername(), false, null);
-        String refreshToken = jwtTokenService.generateRefreshToken(customerUserDetails.getId(), customerUserDetails.getUsername(), false, null);
+        String authToken = authenticationTokenService.generateAuthenticationToken(customerUserDetails.getId(), customerUserDetails.getUsername(), false, null);
+        String refreshToken = authenticationTokenService.generateRefreshToken(customerUserDetails.getId(), customerUserDetails.getUsername(), false, null);
 
         response.addHeader("Authorization", "Bearer " + authToken);
-        response.addCookie(buildRefreshTokenCookie(refreshToken));
+        response.addCookie(authenticationTokenService.buildRefreshTokenCookie(refreshToken));
     }
 
-    protected Cookie buildRefreshTokenCookie(String refreshToken) {
-        Cookie cookie = new Cookie(getRefreshTokenCookieName(), refreshToken);
-        cookie.setPath("/");
-        cookie.setMaxAge(getRefreshTokenCookieMaxAge());
-        cookie.setHttpOnly(true);
-        return cookie;
-    }
 
-    protected String getRefreshTokenCookieName() {
-        return environment.getProperty("blc.auth.jwt.refresh.cookie.name");
-    }
 
-    protected int getRefreshTokenCookieMaxAge() {
-        return environment.getProperty("blc.auth.jwt.refresh.cookie.expiration", Integer.class);
-    }
 }

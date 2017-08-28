@@ -40,16 +40,16 @@ public class JWTCustomerStateServiceImpl implements CustomerStateService {
 
     protected final Environment environment;
     protected final CustomerService customerService;
-    protected final JWTTokenService jwtTokenService;
+    protected final AuthenticationTokenService authenticationTokenService;
 
     @Autowired(required = false)
     @Qualifier("blCrossAppAuthService")
     protected CrossAppAuthService crossAppAuthService;
 
-    public JWTCustomerStateServiceImpl(Environment environment, CustomerService customerService, JWTTokenService jwtTokenService) {
+    public JWTCustomerStateServiceImpl(Environment environment, CustomerService customerService, AuthenticationTokenService authenticationTokenService) {
         this.environment = environment;
         this.customerService = customerService;
-        this.jwtTokenService = jwtTokenService;
+        this.authenticationTokenService = authenticationTokenService;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class JWTCustomerStateServiceImpl implements CustomerStateService {
             if (customerToken != null) {
 
                 // 2. parse the token to get the customer id
-                Long customerId = jwtTokenService.parseCustomerToken(customerToken);
+                Long customerId = authenticationTokenService.parseCustomerToken(customerToken);
 
                 if (customerId != null) {
 

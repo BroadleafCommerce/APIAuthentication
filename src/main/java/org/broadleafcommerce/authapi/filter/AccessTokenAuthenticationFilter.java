@@ -23,7 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.broadleafcommerce.authapi.domain.JWTAuthenticationToken;
+import org.broadleafcommerce.authapi.domain.AccessTokenAuthentication;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -33,14 +33,14 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * This filter is responsible for authenticating the request based on the access token in the Authorization header.
  * This will only run when the Authorization header is present and is prepended with "Bearer" to indicate it is a
- * JWT authentication token.
+ * access token.
  *
  * @author Nick Crum ncrum
  */
-public class JWTAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {
+public class AccessTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    public JWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) {
-        super("/**");
+    public AccessTokenAuthenticationFilter(String url, AuthenticationManager authenticationManager) {
+        super(url);
         setAuthenticationManager(authenticationManager);
     }
 
@@ -53,7 +53,7 @@ public class JWTAuthenticationTokenFilter extends AbstractAuthenticationProcessi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String authToken = request.getHeader("Authorization").substring(7);
-        JWTAuthenticationToken authRequest = new JWTAuthenticationToken(authToken);
+        AccessTokenAuthentication authRequest = new AccessTokenAuthentication(authToken);
 
         return getAuthenticationManager().authenticate(authRequest);
     }

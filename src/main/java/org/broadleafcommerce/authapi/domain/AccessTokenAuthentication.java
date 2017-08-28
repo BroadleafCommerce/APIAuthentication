@@ -17,31 +17,32 @@
  */
 package org.broadleafcommerce.authapi.domain;
 
+import org.broadleafcommerce.authapi.filter.AccessTokenAuthenticationFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 /**
- * This object is used to represent the Authentication for a refresh token.
+ * This object is used to represent the Authentication for an authentication token.
  *
- * @see com.mycompany.api.authentication.filter.JWTRefreshTokenFilter
+ * @see AccessTokenAuthenticationFilter
  * @author Nick Crum ncrum
  */
-public class JWTRefreshToken extends UsernamePasswordAuthenticationToken {
+public class AccessTokenAuthentication extends UsernamePasswordAuthenticationToken {
 
     protected String token;
 
-    public JWTRefreshToken(String token) {
+    public AccessTokenAuthentication(String token) {
         super(null, null);
         this.token = token;
     }
 
-    public JWTRefreshToken(Object principal, Object credentials, String token) {
+    public AccessTokenAuthentication(Object principal, Object credentials, String token) {
         super(principal, credentials);
         this.token = token;
     }
 
-    public JWTRefreshToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities, String token) {
+    public AccessTokenAuthentication(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities, String token) {
         super(principal, credentials, authorities);
         this.token = token;
     }

@@ -17,10 +17,8 @@
  */
 package org.broadleafcommerce.authapi.provider;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
+import org.broadleafcommerce.authapi.filter.RefreshTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -32,35 +30,33 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import org.broadleafcommerce.authapi.domain.JWTRefreshToken;
-import org.broadleafcommerce.authapi.domain.JWTUserDTO;
-import org.broadleafcommerce.authapi.exception.ExpiredJWTAuthenticationException;
-import org.broadleafcommerce.authapi.service.JWTTokenService;
+import org.broadleafcommerce.authapi.domain.RefreshTokenAuthentication;
+import org.broadleafcommerce.authapi.domain.ApiUserDTO;
+import org.broadleafcommerce.authapi.service.AuthenticationTokenService;
 import java.util.List;
 
 /**
- * This provider is responsible for handling authentication for a {@code JWTAuthenticationToken} authentication.
- * This is generally only run when using the {@link org.broadleafcommerce.authapi.filter.JWTRefreshTokenFilter}
+ * This provider is responsible for handling authentication for a {@code RefreshTokenAuthentication} authentication.
+ * This is generally only run when using the {@link RefreshTokenAuthenticationFilter}
  * to verify the validity of the refresh token before generating a new access token for the user.
  *
  * @author Nick Crum ncrum
  */
-@Service("blJWTRefreshAuthenticationProvider")
-@ConditionalOnProperty("blc.auth.jwt.enabled")
-public class JWTRefreshAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
+@Service("blRefreshTokenAuthenticationProvider")
+public class RefreshTokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
-    protected final JWTTokenService jwtTokenService;
+    protected final AuthenticationTokenService authenticationTokenService;
     protected final UserDetailsService userDetailsService;
 
     @Autowired
-    public JWTRefreshAuthenticationProvider(JWTTokenService jwtTokenService, UserDetailsService userDetailsService) {
-        this.jwtTokenService = jwtTokenService;
+    public RefreshTokenAuthenticationProvider(AuthenticationTokenService authenticationTokenService, UserDetailsService userDetailsService) {
+        this.authenticationTokenService = authenticationTokenService;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return (JWTRefreshToken.class.isAssignableFrom(authentication));
+        return (RefreshTokenAuthentication.class.isAssignableFrom(authentication));
     }
 
     @Override
@@ -69,8 +65,8 @@ public class JWTRefreshAuthenticationProvider extends AbstractUserDetailsAuthent
 
     @Override
     protected Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user) {
-        JWTRefreshToken jwtAuthenticationToken = (JWTRefreshToken) authentication;
-        JWTRefreshToken result = new JWTRefreshToken(
+        RefreshTokenAuthentication jwtAuthenticationToken = (RefreshTokenAuthentication) authentication;
+        RefreshTokenAuthentication result = new RefreshTokenAuthentication(
                 principal, authentication.getCredentials(), user.getAuthorities(), jwtAuthenticationToken.getToken());
         result.setDetails(authentication.getDetails());
         return result;
@@ -78,15 +74,10 @@ public class JWTRefreshAuthenticationProvider extends AbstractUserDetailsAuthent
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        JWTRefreshToken jwtAuthenticationToken = (JWTRefreshToken) authentication;
+        RefreshTokenAuthentication jwtAuthenticationToken = (RefreshTokenAuthentication) authentication;
         String token = jwtAuthenticationToken.getToken();
 
-        JWTUserDTO dto = null;
-        try {
-            dto = jwtTokenService.parseRefreshToken(token);
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredJWTAuthenticationException(e);
-        }
+        ApiUserDTO dto = authenticationTokenService.parseRefreshToken(token);
 
         if (dto == null) {
             throw new AuthenticationServiceException("INVALID_REFRESH_TOKEN");

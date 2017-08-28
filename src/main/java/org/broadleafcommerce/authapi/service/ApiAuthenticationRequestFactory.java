@@ -18,20 +18,20 @@
 package org.broadleafcommerce.authapi.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.broadleafcommerce.authapi.filter.JWTAuthenticationTokenFilter;
-import org.broadleafcommerce.authapi.filter.JWTLoginFilter;
-import org.broadleafcommerce.authapi.filter.JWTRefreshTokenFilter;
-import org.broadleafcommerce.authapi.filter.JWTRegisterFilter;
+import org.broadleafcommerce.authapi.filter.AccessTokenAuthenticationFilter;
+import org.broadleafcommerce.authapi.filter.ApiLoginFilter;
+import org.broadleafcommerce.authapi.filter.RefreshTokenAuthenticationFilter;
+import org.broadleafcommerce.authapi.filter.ApiRegisterFilter;
 
 /**
  * @author Nick Crum ncrum
  */
-public interface JWTRequestFilterService {
-    JWTAuthenticationTokenFilter buildJWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) throws Exception;
+public interface ApiAuthenticationRequestFactory {
+    AccessTokenAuthenticationFilter buildAccessTokenAuthenticationFilter(String url, AuthenticationManager authenticationManager) throws Exception;
 
-    JWTRefreshTokenFilter buildJWTRefreshTokenFilter(String url, AuthenticationManager authenticationManager) throws Exception;
+    RefreshTokenAuthenticationFilter buildRefreshTokenAuthenticationFilter(String url, AuthenticationManager authenticationManager) throws Exception;
 
-    JWTLoginFilter buildJWTLoginFilter(String url, AuthenticationManager authenticationManager) throws Exception;
+    ApiLoginFilter buildLoginFilter(String url, AuthenticationManager authenticationManager) throws Exception;
 
-    JWTRegisterFilter buildJWTRegisterFilter(String url, AuthenticationManager authenticationManager) throws Exception;
+    ApiRegisterFilter buildRegisterFilter(String url, AuthenticationManager authenticationManager) throws Exception;
 }
