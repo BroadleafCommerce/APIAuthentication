@@ -21,9 +21,9 @@ import org.broadleafcommerce.authapi.filter.AccessTokenAuthenticationFilter;
 import org.broadleafcommerce.authapi.filter.ApiLoginFilter;
 import org.broadleafcommerce.authapi.filter.ApiRegisterFilter;
 import org.broadleafcommerce.authapi.filter.RefreshTokenAuthenticationFilter;
-import org.broadleafcommerce.authapi.filter.handler.TokenAuthenticationSuccessHandler;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,11 +34,11 @@ public class ApiAuthenticationRequestFactoryImpl implements ApiAuthenticationReq
 
     protected final Environment environment;
     protected final AuthenticationTokenService authenticationTokenService;
-    protected final TokenAuthenticationSuccessHandler authenticationSuccessHandler;
+    protected final AuthenticationSuccessHandler authenticationSuccessHandler;
     protected final CustomerStateService customerStateService;
 
     public ApiAuthenticationRequestFactoryImpl(Environment environment, AuthenticationTokenService authenticationTokenService,
-                                               TokenAuthenticationSuccessHandler authenticationSuccessHandler,
+                                               AuthenticationSuccessHandler authenticationSuccessHandler,
                                                CustomerStateService customerStateService) {
         this.environment = environment;
         this.authenticationTokenService = authenticationTokenService;
